@@ -16,7 +16,7 @@ Clone the repository and install the dependencies for the root, the backend serv
 
 ```Bash
 # Clone the repository
-git clone <your-repository-link>
+git clone [<repository link>](https://github.com/DogeDevYT/GT-Referrals/)
 cd gt-referrals
 ```
 # Install root dependencies (for running concurrent scripts)
