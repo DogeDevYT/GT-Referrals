@@ -26,7 +26,7 @@ cd gt-referrals
 `cd server && npm install`
 
 # Install frontend dependencies
-`cd ../client && npm install`
+`cd ../client/client && npm install`
 
 ## 3. Configuration
 Create a .env file inside the /server directory to hold your environment variables:
