@@ -15,6 +15,21 @@ A platform connecting Georgia Tech students (**Jobseekers**) with GT alumni work
 | **Company** | An employer with one or more verified email domains (e.g. `google.com`). Used to verify Employee registration. |
 | **Connections** | LinkedIn connections pulled via OAuth. The recommendation algorithm surfaces Employees who share connections or clubs with the Jobseeker. |
 
+## Systems Architecture
+
+```mermaid
+graph TD
+    User([End User]) -->|Browser| CF[Cloudflare Pages<br/>(React / Vite Frontend)]
+    
+    CF -->|Axios REST / HTTPS| Render[Render.com<br/>(Node.js / Express Backend)]
+    CF -->|Login Redirect| LinkedIn_OAuth[LinkedIn OAuth API]
+    
+    Render -->|Mongoose TCP| Mongo[(MongoDB Atlas)]
+    Render <-->|OIDC Token Exchange| LinkedIn_OAuth
+    
+    Render -.->|Callback Redirect| CF
+```
+
 ## Getting Started
 
 ### 1. Prerequisites
@@ -78,7 +93,28 @@ To help with testing the referral flow, several fictional FAANG employee account
 
 ---
 
-### 6. Backend Structure
+### 6. Deployment
+
+This repository is configured for a modern, decoupled serverless/PaaS deployment architecture:
+
+#### Frontend (Cloudflare Pages)
+1. In Cloudflare, navigate to **Pages** -> **Connect to Git** and select this repository.
+2. Build Settings:
+   - Framework preset: `Vite`
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+   - Root directory: `gt-referrals/client/client`
+3. Add `VITE_API_URL` to the environment variables, pointing to your live backend URL (e.g., `https://your-api.onrender.com/api`).
+
+#### Backend (Render.com)
+The backend is completely fully configured with Infrastructure-as-Code via the included `render.yaml` blueprint.
+1. In Render, select **New +** -> **Blueprint**.
+2. Connect this repository. Render will automatically provision the Node.js Web Service on their free tier.
+3. In the Render Dashboard under **Environment**, fill in your missing production variables (`MONGO_URI`, `JWT_SECRET`, `LINKEDIN_CLIENT_ID`, etc.).
+
+---
+
+### 7. Backend Structure
 
 ```
 server/
