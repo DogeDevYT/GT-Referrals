@@ -1,16 +1,18 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 
 import connectDB from './config/db.js';
-import './config/passport.js';
+import { initPassport } from './config/passport.js';
 
 import authRoutes from './routes/auth.js';
 import employeeRoutes from './routes/employees.js';
 import jobseekerRoutes from './routes/jobseekers.js';
 import referralRoutes from './routes/referrals.js';
 
-dotenv.config();
+initPassport();
 
 const app = express();
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
