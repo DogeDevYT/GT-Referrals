@@ -2,6 +2,7 @@ services:
   - type: web
     name: gt-referrals-api
     env: node
+    plan: free
     rootDir: gt-referrals/server
     buildCommand: npm install
     startCommand: npm start
