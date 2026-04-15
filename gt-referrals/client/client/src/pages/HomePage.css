@@ -1,0 +1,130 @@
+.home-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.home-hero {
+  margin-bottom: 2.5rem;
+}
+
+.home-greeting {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+
+.home-tagline {
+  font-size: 1.0625rem;
+  color: var(--text-muted);
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.home-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.section-header h2 {
+  margin-bottom: 0.35rem;
+}
+
+.section-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 480px;
+}
+
+.section-action {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 0.25rem 0;
+  transition: color var(--transition);
+}
+.section-action:hover { color: var(--gold); }
+
+.home-search-row {
+  margin-top: 1.5rem;
+}
+
+.home-search {
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Stats */
+.home-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.home-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.home-stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.home-stat-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.home-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.home-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.home-stat-card .home-stat-value {
+  font-size: 2.25rem;
+}
+
+.home-actions-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .home-greeting { font-size: 1.875rem; }
+  .home-stats-row { grid-template-columns: 1fr; }
+}

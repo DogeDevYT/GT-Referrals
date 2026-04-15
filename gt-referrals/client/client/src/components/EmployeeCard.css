@@ -1,0 +1,57 @@
+.employee-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.employee-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.employee-avatar {
+  flex-shrink: 0;
+}
+
+.employee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.employee-title {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.employee-company {
+  font-size: 0.8125rem;
+  color: var(--gold-dark);
+  font-weight: 600;
+}
+
+.rec-score {
+  flex-shrink: 0;
+}
+
+.employee-clubs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}

@@ -84,7 +84,7 @@ router.post('/referrals', protect, requireRole('jobseeker'), async (req, res) =>
 });
 
 // Get recommended employees (connections algorithm)
-// Ranks employees by: shared clubs > shared LinkedIn connections > company match
+// Ranks employees by: shared clubs > shared LinkedIn connections > target company match
 router.get('/recommendations', protect, requireRole('jobseeker'), async (req, res) => {
   const jobseeker = await Jobseeker.findById(req.user._id).populate('clubs targetCompanies');
 
@@ -92,9 +92,7 @@ router.get('/recommendations', protect, requireRole('jobseeker'), async (req, re
   const jsConnectionIds = new Set(jobseeker.connections.map((c) => c.linkedinId));
   const targetCompanyIds = new Set(jobseeker.targetCompanies.map((c) => c._id.toString()));
 
-  const employees = await Employee.find({
-    company: { $in: [...targetCompanyIds] },
-  })
+  const employees = await Employee.find()
     .populate('company', 'name logoUrl')
     .lean();
 
@@ -103,7 +101,10 @@ router.get('/recommendations', protect, requireRole('jobseeker'), async (req, re
       jsClubIds.has(id.toString())
     ).length;
     const isConnection = jsConnectionIds.has(emp.linkedinId);
-    const score = clubOverlap * 3 + (isConnection ? 5 : 0);
+    const isTarget = emp.company && targetCompanyIds.has(emp.company._id.toString());
+    
+    // Weighted scoring
+    const score = (clubOverlap * 3) + (isConnection ? 5 : 0) + (isTarget ? 4 : 0);
     return { ...emp, recommendationScore: score };
   });
 

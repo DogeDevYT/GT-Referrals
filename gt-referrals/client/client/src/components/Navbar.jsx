@@ -1,0 +1,73 @@
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Navbar.css';
+
+export default function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const isActive = (path) => location.pathname === path;
+
+  const initials = user?.name
+    ? user.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
+    : '?';
+
+  return (
+    <nav className="navbar">
+      <div className="navbar-inner">
+        <Link to="/" className="navbar-brand">
+          <span className="navbar-logo-gt">GT</span>
+          <span className="navbar-logo-text"> Referrals</span>
+        </Link>
+
+        {user && (
+          <div className="navbar-links">
+            {user.role === 'jobseeker' && (
+              <>
+                <Link to="/find-alumni" className={`navbar-link ${isActive('/find-alumni') ? 'active' : ''}`}>
+                  Find Alumni
+                </Link>
+                <Link to="/my-requests" className={`navbar-link ${isActive('/my-requests') ? 'active' : ''}`}>
+                  My Requests
+                </Link>
+              </>
+            )}
+            {user.role === 'employee' && (
+              <>
+                <Link to="/inbox" className={`navbar-link ${isActive('/inbox') ? 'active' : ''}`}>
+                  Inbox
+                </Link>
+              </>
+            )}
+          </div>
+        )}
+
+        <div className="navbar-right">
+          {user ? (
+            <div className="navbar-user-menu">
+              <div className="avatar navbar-avatar" title={user.name}>
+                {user.linkedin?.photo
+                  ? <img src={user.linkedin.photo} alt={user.name} />
+                  : initials}
+              </div>
+              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <div className="navbar-auth-links">
+              <Link to="/login" className="btn btn-ghost btn-sm">Sign in</Link>
+              <Link to="/register" className="btn btn-primary btn-sm">Get started</Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}

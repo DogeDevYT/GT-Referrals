@@ -43,7 +43,7 @@ router.patch('/referrals/:id/approve', protect, requireRole('employee'), async (
 
   referral.status = 'approved';
   referral.approvedAt = new Date();
-  referral.employeeNote = req.body.note;
+  referral.employeeNote = req.body?.note || '';
   referral.creditsAwarded = referral.creditsUsed; // employee earns what jobseeker spent
   await referral.save();
 
@@ -61,7 +61,7 @@ router.patch('/referrals/:id/reject', protect, requireRole('employee'), async (r
 
   referral.status = 'rejected';
   referral.rejectedAt = new Date();
-  referral.employeeNote = req.body.note;
+  referral.employeeNote = req.body?.note || '';
   await referral.save();
 
   // Refund credits to jobseeker

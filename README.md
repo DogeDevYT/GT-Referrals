@@ -66,7 +66,19 @@ npm run dev
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5000
 
-### 5. Backend Structure
+### 5. Testing with Mock Data
+
+To help with testing the referral flow, several fictional FAANG employee accounts have been seeded into the database. You can log into any of these accounts using the generic password: `password123`.
+
+- **Google**: `sundar@google.com`, `ada@google.com`
+- **Apple**: `tim@apple.com`, `alan@apple.com`
+- **Meta**: `mark@meta.com`
+- **Amazon**: `jeff@amazon.com`
+- **Netflix**: `reed@netflix.com`
+
+---
+
+### 6. Backend Structure
 
 ```
 server/
