@@ -19,12 +19,12 @@ A platform connecting Georgia Tech students (**Jobseekers**) with GT alumni work
 
 ```mermaid
 graph TD
-    User([End User]) -->|Browser| CF[Cloudflare Pages<br/>(React / Vite Frontend)]
+    User([End User]) -->|Browser| CF["Cloudflare Pages<br/>(React / Vite Frontend)"]
     
-    CF -->|Axios REST / HTTPS| Render[Render.com<br/>(Node.js / Express Backend)]
-    CF -->|Login Redirect| LinkedIn_OAuth[LinkedIn OAuth API]
+    CF -->|Axios REST / HTTPS| Render["Render.com<br/>(Node.js / Express Backend)"]
+    CF -->|Login Redirect| LinkedIn_OAuth["LinkedIn OAuth API"]
     
-    Render -->|Mongoose TCP| Mongo[(MongoDB Atlas)]
+    Render -->|Mongoose TCP| Mongo[("MongoDB Atlas")]
     Render <-->|OIDC Token Exchange| LinkedIn_OAuth
     
     Render -.->|Callback Redirect| CF
