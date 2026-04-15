@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: gt-referrals-api
+    env: node
+    rootDir: gt-referrals/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render dynamically assigns the PORT, but explicitly defining it here sets the expectation
+      - key: PORT
+        value: 10000 
+      # The rest of these must be filled in securely via the Render Dashboard:
+      - key: MONGO_URI
+        sync: false
+      - key: LINKEDIN_CLIENT_ID
+        sync: false
+      - key: LINKEDIN_CLIENT_SECRET
+        sync: false
+      - key: LINKEDIN_CALLBACK_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false
