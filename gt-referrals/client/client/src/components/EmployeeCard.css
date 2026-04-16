@@ -3,6 +3,9 @@
   flex-direction: column;
   padding: 1.5rem;
   transition: box-shadow var(--transition), transform var(--transition);
+
+  background-color: var(--bg-card); 
+  border: 1px solid var(--border-color);
 }
 .employee-card:hover {
   transform: translateY(-2px);
@@ -32,6 +35,8 @@
   font-size: 1rem;
   font-weight: 700;
   color: var(--navy);
+
+  color: var(--text-main);
 }
 
 .employee-title {

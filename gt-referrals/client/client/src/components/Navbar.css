@@ -2,9 +2,10 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--white);
-  border-bottom: 1.5px solid var(--border);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-inner {
@@ -17,10 +18,10 @@
   gap: 2rem;
 }
 
+
 .navbar-brand {
   font-size: 1.125rem;
   font-weight: 800;
-  color: var(--navy);
   display: flex;
   align-items: center;
   gap: 0.15rem;
@@ -28,10 +29,14 @@
   white-space: nowrap;
   flex-shrink: 0;
   font-style: italic;
+  color: var(--text-main); 
 }
 
-.navbar-logo-gt {
-  color: var(--gold);
+.navbar-logo-gt { color: var(--gold); }
+
+.navbar .navbar-logo-text {
+  color: var(--text-main) !important;
+  transition: color 0.3s ease;
 }
 
 .navbar-links {
@@ -47,27 +52,50 @@
   border-radius: var(--radius-pill);
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--text-muted);
-  transition: color var(--transition), background var(--transition);
+  color: var(--text-muted); 
+  transition: all 0.3s ease;
 }
 
-.navbar-link:hover {
-  color: var(--navy);
-  background: rgba(0,48,87,0.06);
+.navbar-link:hover, .navbar-link.active {
+  color: var(--text-main); 
+  background: rgba(179, 163, 105, 0.1); 
 }
 
 .navbar-link.active {
-  color: var(--navy);
   font-weight: 600;
-  background: rgba(0,48,87,0.08);
 }
 
+.navbar .btn-ghost {
+  height: 35px !important;
+  padding: 0 1.4rem;
+  border-radius: 9999px;
+  background-color: var(--btn-secondary-bg) !important;
+  color: var(--text-main) !important;
+  border: none !important; 
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.navbar .btn-ghost:hover {
+  background-color: var(--btn-secondary-hover) !important;
+  color: var(--text-main) !important;
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.navbar .btn-ghost:active {
+  transform: translateY(0px);
+}
+
+/* 5. Right Side Menu */
 .navbar-right {
   margin-left: auto;
   flex-shrink: 0;
-}
-
-.navbar-user-menu {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -81,6 +109,28 @@
 
 .navbar-avatar {
   cursor: pointer;
-  transition: opacity var(--transition);
+  transition: opacity 0.2s;
 }
 .navbar-avatar:hover { opacity: 0.85; }
+
+/* This ensures the Avatar and Sign Out button stay in a row */
+.navbar-user-menu, .navbar-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+}
+
+/* Ensure the avatar stays a perfect circle and doesn't stretch */
+.navbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gold);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}

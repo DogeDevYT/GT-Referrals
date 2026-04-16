@@ -9,6 +9,7 @@ import FindAlumniPage from './pages/FindAlumniPage';
 import InboxPage from './pages/InboxPage';
 import MyRequestsPage from './pages/MyRequestsPage';
 import './App.css';
+import ThemeToggle from './components/ThemeToggle';
 
 // Protected Route wrappers
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -59,6 +60,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ThemeToggle />
         <AppRoutes />
       </Router>
     </AuthProvider>

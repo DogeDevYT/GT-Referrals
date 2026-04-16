@@ -12,8 +12,8 @@
   --bg:         #f7f8fa;
   --surface:    #ffffff;
   --border:     #e5e7eb;
-  --text:       #003057;
-  --text-muted: #6b7280;
+  --text-main: #003057;
+  --text-muted: #64748b;
   --text-light: #9ca3af;
   --success:    #10b981;
   --warning:    #f59e0b;
@@ -27,6 +27,38 @@
   --shadow-md:  0 4px 16px rgba(0,0,0,0.1);
   --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
   --transition: 0.2s ease;
+  --border-color: #94a3b8;
+  --btn-secondary-bg: #e7ecf2;
+  --btn-secondary-hover: #b9c1cb;
+}
+
+/* Your new Dark Mode */
+.dark {
+  --bg-color: #0f172a; 
+  --bg-card: #1e293b;  
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1;
+  --border-color: #cbd5e1;
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --btn-secondary-bg: #334155;
+  --btn-secondary-hover: #475569;
+}
+
+.theme-page {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-card {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-text {
+  color: var(--text-main);
 }
 
 /* ── Reset ── */
@@ -36,11 +68,12 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background-color: var(--bg-color); 
+  color: var(--text-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a { color: inherit; text-decoration: none; }
