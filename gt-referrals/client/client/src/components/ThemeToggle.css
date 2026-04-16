@@ -51,3 +51,28 @@
 
 .sun-icon { color: #facc15; }
 .moon-icon { color: #cbd5e1; }
+
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 999px; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  
+  background-color: var(--toggle-pill-bg);
+  border: 1px solid var(--toggle-pill-border);
+}
+
+
+.theme-toggle-active-circle {
+  background-color: #3b82f6; 
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

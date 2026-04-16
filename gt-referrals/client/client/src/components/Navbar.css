@@ -134,3 +134,23 @@
   font-size: 0.75rem;
   flex-shrink: 0;
 }
+
+.nav-right-section {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important; 
+  justify-content: flex-end !important; 
+  gap: 20px; 
+  
+  
+  height: 100%; 
+}
+
+
+.theme-toggle-container {
+  margin: 0 !important;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transform: translateY(-5px) !important;
+}

@@ -30,6 +30,8 @@
   --border-color: #94a3b8;
   --btn-secondary-bg: #e7ecf2;
   --btn-secondary-hover: #b9c1cb;
+  --toggle-pill-bg: #f1f5f9; 
+  --toggle-pill-border: #e2e8f0;
 }
 
 /* Your new Dark Mode */
@@ -42,6 +44,8 @@
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
   --btn-secondary-bg: #334155;
   --btn-secondary-hover: #475569;
+  --toggle-pill-bg: #1e293b; 
+  --toggle-pill-border: #334155;
 }
 
 .theme-page {
