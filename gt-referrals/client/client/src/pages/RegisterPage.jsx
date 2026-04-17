@@ -31,7 +31,11 @@ export default function RegisterPage() {
       }
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      if (!err.response && (err.code === 'ERR_NETWORK' || err.message === 'Network Error')) {
+        setError('Cannot reach the backend API. Start the server and try again.');
+      } else {
+        setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

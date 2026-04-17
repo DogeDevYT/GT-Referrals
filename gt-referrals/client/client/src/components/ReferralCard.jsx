@@ -13,14 +13,15 @@ export default function ReferralCard({ referral, onApprove, onReject, viewAs }) 
   const other = isEmployee ? referral.jobseeker : referral.employee;
   const otherName = other?.name || 'Unknown';
   const otherInitials = otherName.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+  const avatarSrc = other?.profilePhoto || other?.linkedin?.photo || '';
 
   return (
     <div className={`referral-card card fade-in status-${referral.status}`}>
       <div className="referral-card-header">
         <div className="referral-card-who">
           <div className="avatar">
-            {other?.linkedin?.photo
-              ? <img src={other.linkedin.photo} alt={otherName} />
+            {avatarSrc
+              ? <img src={avatarSrc} alt={otherName} />
               : otherInitials}
           </div>
           <div>

@@ -19,6 +19,7 @@ export default function Navbar() {
   const initials = user?.name
     ? user.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
     : '?';
+  const profilePhoto = user?.profilePhoto || user?.linkedin?.photo;
 
   return (
     <nav className="navbar">
@@ -54,11 +55,15 @@ export default function Navbar() {
 
           {user ? (
             <div className="navbar-user-menu">
-              <div className="avatar navbar-avatar" title={user.name}>
-                {user.linkedin?.photo
-                  ? <img src={user.linkedin.photo} alt={user.name} />
+              <Link
+                to="/profile"
+                className={`avatar navbar-avatar navbar-avatar-link ${isActive('/profile') ? 'navbar-avatar-active' : ''}`}
+                title="Edit profile"
+              >
+                {profilePhoto
+                  ? <img src={profilePhoto} alt={user.name} />
                   : initials}
-              </div>
+              </Link>
               <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
                 Sign out
               </button>
