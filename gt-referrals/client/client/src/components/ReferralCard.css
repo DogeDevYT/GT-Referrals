@@ -107,3 +107,17 @@
   font-weight: 600;
   color: var(--navy);
 }
+
+@media (max-width: 700px) {
+  .referral-card {
+    padding: 1rem;
+  }
+
+  .referral-card-actions {
+    flex-direction: column;
+  }
+
+  .referral-card-actions .btn {
+    width: 100%;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { BadgeCheck } from 'lucide-react';
 import RequestReferralModal from './RequestReferralModal';
 import './EmployeeCard.css';
 
@@ -9,6 +10,7 @@ export default function EmployeeCard({ employee, showRequestButton = true }) {
   const initials = employee.name
     ? employee.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
     : '?';
+  const avatarSrc = employee.profilePhoto || employee.linkedin?.photo || '';
 
   const companyName = employee.company?.name || 'Unknown Company';
 
@@ -17,8 +19,8 @@ export default function EmployeeCard({ employee, showRequestButton = true }) {
       <div className="employee-card card fade-in">
         <div className="employee-card-top">
           <div className="avatar avatar-lg employee-avatar">
-            {employee.linkedin?.photo
-              ? <img src={employee.linkedin.photo} alt={employee.name} />
+            {avatarSrc
+              ? <img src={avatarSrc} alt={employee.name} />
               : initials}
           </div>
           <div className="employee-info">
@@ -26,7 +28,14 @@ export default function EmployeeCard({ employee, showRequestButton = true }) {
             <span className="employee-title">
               {employee.jobTitle || employee.linkedin?.headline || 'GT Alumni'}
             </span>
-            <span className="employee-company">{companyName}</span>
+            <div className="employee-meta-row">
+              <span className="employee-company">{companyName}</span>
+              {employee.isCompanyEmailVerified && (
+                <span className="employee-verified-pill" aria-label="Company verified" title="Company verified">
+                  <BadgeCheck aria-hidden="true" />
+                </span>
+              )}
+            </div>
           </div>
           {employee.recommendationScore > 0 && (
             <div className="rec-score">

@@ -8,6 +8,7 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 import FindAlumniPage from './pages/FindAlumniPage';
 import InboxPage from './pages/InboxPage';
 import MyRequestsPage from './pages/MyRequestsPage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
 
 // Protected Route wrappers
@@ -31,6 +32,12 @@ function AppRoutes() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
           
           <Route path="/find-alumni" element={
             <ProtectedRoute requiredRole="jobseeker">

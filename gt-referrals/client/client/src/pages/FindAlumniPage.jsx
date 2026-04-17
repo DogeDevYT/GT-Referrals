@@ -43,8 +43,8 @@ export default function FindAlumniPage() {
     <div className="page-wrapper fade-in">
       <div className="find-alumni-header">
         <div>
-          <h1>Find Alumni</h1>
-          <p>Discover GT alumni at your target companies, ranked by shared clubs and connections.</p>
+          <h1>Find Verified Alumni</h1>
+          <p>Discover GT alumni with verified company profiles, ranked by shared clubs and connections.</p>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ export default function FindAlumniPage() {
       {!loading && !error && filtered.length === 0 && (
         <div className="empty-state">
           <div className="empty-icon">🔍</div>
-          <h3>No alumni found</h3>
+          <h3>No verified alumni found</h3>
           <p>Try adjusting your search, or add target companies to your profile to get recommendations.</p>
         </div>
       )}
