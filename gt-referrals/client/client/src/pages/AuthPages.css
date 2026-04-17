@@ -102,3 +102,18 @@
   text-align: center;
   margin-top: -0.5rem;
 }
+
+@media (max-width: 560px) {
+  .auth-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .auth-card {
+    padding: 1.35rem;
+    gap: 1rem;
+  }
+
+  .auth-title {
+    font-size: 1.4rem;
+  }
+}

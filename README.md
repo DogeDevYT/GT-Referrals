@@ -152,6 +152,8 @@ server/
 | `GET` | `/api/employees/me` | Employee | Get own profile |
 | `PATCH` | `/api/employees/me` | Employee | Update own profile fields (name, title, department, tagline) |
 | `POST` | `/api/employees/me/photo` | Employee | Upload or replace profile photo |
+| `GET` | `/api/employees/companies?q=<query>` | Employee | Search companies for profile linking |
+| `POST` | `/api/employees/companies` | Employee | Create company if missing and return selection target |
 | `GET` | `/api/employees/referrals/pending` | Employee | Pending referral queue (sorted by priority) |
 | `PATCH` | `/api/employees/referrals/:id/approve` | Employee | Approve referral (earn credits) |
 | `PATCH` | `/api/employees/referrals/:id/reject` | Employee | Reject referral (refund Jobseeker) |

@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
 
@@ -15,6 +16,7 @@
   font-size: 0.875rem;
   color: var(--text-muted);
   margin-top: 0.2rem;
+  line-height: 1.45;
 }
 
 .modal-close {
@@ -50,4 +52,23 @@
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 0.5rem;
+}
+
+@media (max-width: 560px) {
+  .modal-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .modal-subtitle {
+    font-size: 0.82rem;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 0.55rem;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
 }

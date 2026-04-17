@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { BadgeCheck } from 'lucide-react';
 import RequestReferralModal from './RequestReferralModal';
 import './EmployeeCard.css';
 
@@ -27,7 +28,14 @@ export default function EmployeeCard({ employee, showRequestButton = true }) {
             <span className="employee-title">
               {employee.jobTitle || employee.linkedin?.headline || 'GT Alumni'}
             </span>
-            <span className="employee-company">{companyName}</span>
+            <div className="employee-meta-row">
+              <span className="employee-company">{companyName}</span>
+              {employee.isCompanyEmailVerified && (
+                <span className="employee-verified-pill" aria-label="Company verified" title="Company verified">
+                  <BadgeCheck aria-hidden="true" />
+                </span>
+              )}
+            </div>
           </div>
           {employee.recommendationScore > 0 && (
             <div className="rec-score">

@@ -8,6 +8,9 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const firstName = user?.name?.split(' ')[0] || 'Yellow Jacket';
+  const isEmployee = user?.role === 'employee';
+  const hasLinkedCompany = Boolean(isEmployee && user?.company);
+  const isCompanyVerified = Boolean(isEmployee && user?.isCompanyEmailVerified);
 
   return (
     <div className={`home-page fade-in ${!user ? 'home-page-landing' : ''}`}>
@@ -26,18 +29,57 @@ export default function HomePage() {
         {/* Employee section */}
         {user?.role === 'employee' && (
           <section className="home-section card">
-            <div className="section-header">
-              <div>
-                <h2>Verified Employee Dashboard</h2>
-                <p>Help fellow GT alum and current students find referrals by verifying where you're currently working</p>
-              </div>
-              <Link to="/inbox" className="section-action">Manage Referrals</Link>
-            </div>
-            <div className="home-actions-row" style={{ marginTop: '1.5rem' }}>
-              <Link to="/inbox" id="home-verify-company" className="btn btn-gold btn-full" style={{ maxWidth: '500px' }}>
-                View Pending Referrals →
-              </Link>
-            </div>
+            {!hasLinkedCompany && (
+              <>
+                <div className="section-header">
+                  <div>
+                    <h2>Complete Your Employee Profile</h2>
+                    <p>Add your company and company email to become discoverable by GT students.</p>
+                  </div>
+                  <Link to="/profile" className="section-action">Open Profile</Link>
+                </div>
+                <div className="home-actions-row" style={{ marginTop: '1.5rem' }}>
+                  <Link to="/profile" id="home-verify-company" className="btn btn-gold btn-full" style={{ maxWidth: '500px' }}>
+                    Add Company & Continue
+                  </Link>
+                </div>
+              </>
+            )}
+
+            {hasLinkedCompany && !isCompanyVerified && (
+              <>
+                <div className="section-header">
+                  <div>
+                    <h2>Company Verification Pending</h2>
+                    <p>Your company is linked, but your company email must match a verified company domain before students can discover you.</p>
+                  </div>
+                  <Link to="/profile" className="section-action">Resolve in Profile</Link>
+                </div>
+                <div className="home-actions-row" style={{ marginTop: '1.5rem' }}>
+                  <Link to="/profile" id="home-verify-company" className="btn btn-gold btn-full" style={{ maxWidth: '500px' }}>
+                    Update Company Email
+                  </Link>
+                </div>
+                <p className="home-verification-note">You remain hidden from student discovery until verification is complete.</p>
+              </>
+            )}
+
+            {hasLinkedCompany && isCompanyVerified && (
+              <>
+                <div className="section-header">
+                  <div>
+                    <h2>Verified Employee Dashboard</h2>
+                    <p>You are visible to GT students and can manage active referral requests from your inbox.</p>
+                  </div>
+                  <Link to="/inbox" className="section-action">Manage Referrals</Link>
+                </div>
+                <div className="home-actions-row" style={{ marginTop: '1.5rem' }}>
+                  <Link to="/inbox" id="home-verify-company" className="btn btn-gold btn-full" style={{ maxWidth: '500px' }}>
+                    View Pending Referrals →
+                  </Link>
+                </div>
+              </>
+            )}
 
             {/* Stats row */}
             <div className="home-stats">
@@ -56,18 +98,33 @@ export default function HomePage() {
         {/* Jobseeker section */}
         {user?.role === 'jobseeker' && (
           <>
-            {/* Verify Company teaser */}
+            {/* Referral dashboard */}
             <section className="home-section card">
               <div className="section-header">
                 <div>
-                  <h2>Verified Employee Dashboard</h2>
-                  <p>Help fellow GT alum and current students find referrals by verifying where you're currently working</p>
+                  <h2>Your Referral Dashboard</h2>
+                  <p>Browse verified employees, request referrals, and keep your outreach organized.</p>
                 </div>
-                <button className="section-action">Manage Verification</button>
+                <Link to="/my-requests" className="section-action">View My Requests</Link>
               </div>
-              <button id="home-verify-company" className="btn btn-gold" style={{ marginTop: '1.5rem', minWidth: '220px' }}>
-                Verify Company
-              </button>
+              <div className="home-actions-row" style={{ marginTop: '1.5rem' }}>
+                <button
+                  id="home-find-verified"
+                  className="btn btn-gold"
+                  style={{ minWidth: '220px' }}
+                  onClick={() => navigate('/find-alumni')}
+                >
+                  Find Verified Alumni
+                </button>
+                <button
+                  id="home-view-requests"
+                  className="btn btn-outline"
+                  style={{ minWidth: '220px' }}
+                  onClick={() => navigate('/my-requests')}
+                >
+                  Track My Requests
+                </button>
+              </div>
             </section>
 
             {/* Find Alumni */}

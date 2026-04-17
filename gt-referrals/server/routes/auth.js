@@ -11,6 +11,14 @@ const router = Router();
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+const getEmailDomain = (value) => {
+  const atIndex = typeof value === 'string' ? value.lastIndexOf('@') : -1;
+  if (atIndex < 0) {
+    return '';
+  }
+
+  return value.slice(atIndex + 1).trim().toLowerCase();
+};
 
 // --- LinkedIn OAuth ---
 router.get('/linkedin', passport.authenticate('linkedin'));
@@ -38,6 +46,22 @@ router.post('/register/employee', async (req, res) => {
   const existing = await User.findOne({ email });
   if (existing) return res.status(409).json({ message: 'Email already in use' });
 
+  let linkedCompanyId = null;
+  let isCompanyEmailVerified = false;
+
+  if (companyId) {
+    const company = await Company.findById(companyId).select('_id emailDomains');
+    if (!company) {
+      return res.status(404).json({ message: 'Selected company was not found' });
+    }
+
+    linkedCompanyId = company._id;
+    const companyDomains = Array.isArray(company.emailDomains)
+      ? company.emailDomains.map((domain) => String(domain).toLowerCase())
+      : [];
+    isCompanyEmailVerified = companyDomains.includes(getEmailDomain(companyEmail));
+  }
+
   const passwordHash = await bcrypt.hash(password, 12);
 
   const employee = await Employee.create({
@@ -45,7 +69,8 @@ router.post('/register/employee', async (req, res) => {
     email,
     passwordHash,
     companyEmail,
-    company: companyId,
+    company: linkedCompanyId,
+    isCompanyEmailVerified,
     jobTitle,
   });
 

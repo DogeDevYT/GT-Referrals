@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import api from '../api/client';
 import './ProfilePage.css';
 
 const MAX_TAGLINE_LENGTH = 140;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MIN_COMPANY_QUERY_LENGTH = 2;
 
 function buildInitialForm(user) {
   if (!user) {
@@ -33,6 +35,11 @@ export default function ProfilePage() {
   const [form, setForm] = useState(() => buildInitialForm(user));
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState('');
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [companyQuery, setCompanyQuery] = useState('');
+  const [companyOptions, setCompanyOptions] = useState([]);
+  const [companyLookupLoading, setCompanyLookupLoading] = useState(false);
+  const [companyActionLoading, setCompanyActionLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [error, setError] = useState('');
@@ -41,6 +48,63 @@ export default function ProfilePage() {
   useEffect(() => {
     setForm(buildInitialForm(user));
   }, [user]);
+
+  useEffect(() => {
+    if (user?.role !== 'employee') {
+      setSelectedCompany(null);
+      setCompanyQuery('');
+      setCompanyOptions([]);
+      return;
+    }
+
+    if (user.company && typeof user.company === 'object' && user.company._id) {
+      setSelectedCompany({
+        _id: user.company._id,
+        name: user.company.name || 'Unnamed company',
+        logoUrl: user.company.logoUrl || '',
+      });
+    } else {
+      setSelectedCompany(null);
+    }
+
+    setCompanyQuery('');
+    setCompanyOptions([]);
+  }, [user]);
+
+  useEffect(() => {
+    if (user?.role !== 'employee') return;
+
+    const query = companyQuery.trim();
+    if (query.length < MIN_COMPANY_QUERY_LENGTH) {
+      setCompanyOptions([]);
+      setCompanyLookupLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    const timeoutId = setTimeout(async () => {
+      setCompanyLookupLoading(true);
+      try {
+        const { data } = await api.get('/employees/companies', { params: { q: query } });
+        if (!cancelled) {
+          setCompanyOptions(Array.isArray(data) ? data : []);
+        }
+      } catch {
+        if (!cancelled) {
+          setCompanyOptions([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setCompanyLookupLoading(false);
+        }
+      }
+    }, 220);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [companyQuery, user?.role]);
 
   useEffect(() => {
     if (!selectedPhoto) {
@@ -65,12 +129,69 @@ export default function ProfilePage() {
   }, [user?.name]);
 
   const resolvedPhoto = photoPreviewUrl || user?.profilePhoto || user?.linkedin?.photo || '';
+  const companyQueryTrimmed = companyQuery.trim();
+  const normalizedCompanyQuery = companyQueryTrimmed.toLowerCase();
+  const hasExactCompanyMatch = normalizedCompanyQuery && companyOptions.some((company) =>
+    company.name?.trim().toLowerCase() === normalizedCompanyQuery
+  );
+  const canCreateCompany =
+    user.role === 'employee' &&
+    companyQueryTrimmed.length >= MIN_COMPANY_QUERY_LENGTH &&
+    !hasExactCompanyMatch;
 
   if (!user) return null;
 
   const onFieldChange = (key) => (event) => {
     const value = event.target.value;
     setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleCompanySelect = (company) => {
+    if (!company?._id) return;
+    setSelectedCompany({
+      _id: company._id,
+      name: company.name || 'Unnamed company',
+      logoUrl: company.logoUrl || '',
+    });
+    setCompanyQuery('');
+    setCompanyOptions([]);
+    setError('');
+    setSuccess('');
+  };
+
+  const handleCreateCompany = async () => {
+    const name = companyQueryTrimmed;
+    if (name.length < MIN_COMPANY_QUERY_LENGTH) return;
+
+    setCompanyActionLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const payload = { name };
+      const companyEmail = form.companyEmail.trim();
+      if (companyEmail.includes('@')) {
+        payload.emailDomain = companyEmail.split('@').pop().trim().toLowerCase();
+      }
+
+      const { data } = await api.post('/employees/companies', payload);
+      if (!data?.company?._id) {
+        throw new Error('Could not create company');
+      }
+
+      handleCompanySelect(data.company);
+      setSuccess(data.created ? 'Company created and selected.' : 'Existing company selected.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Could not add company. Please try again.');
+    } finally {
+      setCompanyActionLoading(false);
+    }
+  };
+
+  const clearCompanySelection = () => {
+    setSelectedCompany(null);
+    setError('');
+    setSuccess('');
   };
 
   const validateProfileForm = () => {
@@ -88,6 +209,10 @@ export default function ProfilePage() {
 
     if (user.role === 'employee' && form.companyEmail && !form.companyEmail.includes('@')) {
       return 'Company email must be a valid email address';
+    }
+
+    if (user.role === 'employee' && !selectedCompany?._id) {
+      return 'Please select or create your company before saving your profile';
     }
 
     return '';
@@ -112,6 +237,7 @@ export default function ProfilePage() {
     if (user.role === 'employee') {
       payload.jobTitle = form.jobTitle.trim();
       payload.department = form.department.trim();
+      payload.companyId = selectedCompany._id;
       const companyEmail = form.companyEmail.trim();
       if (companyEmail) {
         payload.companyEmail = companyEmail;
@@ -288,6 +414,76 @@ export default function ProfilePage() {
               </>
             )}
           </div>
+
+          {user.role === 'employee' && (
+            <div className="form-group profile-field-full">
+              <label htmlFor="profile-company-search" className="form-label">Company</label>
+
+              <div className="profile-company-status">
+                {selectedCompany ? (
+                  <>
+                    <span className="profile-company-selected-name">
+                      Selected: {selectedCompany.name}
+                    </span>
+                    <button
+                      type="button"
+                      className="profile-company-clear"
+                      onClick={clearCompanySelection}
+                    >
+                      Clear
+                    </button>
+                  </>
+                ) : (
+                  <span className="profile-company-empty">No company selected yet.</span>
+                )}
+              </div>
+
+              <input
+                id="profile-company-search"
+                className="form-input"
+                value={companyQuery}
+                onChange={(event) => setCompanyQuery(event.target.value)}
+                placeholder="Search existing companies or type to add a new one"
+              />
+
+              {companyLookupLoading && (
+                <span className="profile-company-meta">Searching companies...</span>
+              )}
+
+              {!companyLookupLoading && companyOptions.length > 0 && (
+                <div className="profile-company-results" role="listbox" aria-label="Company search results">
+                  {companyOptions.map((company) => (
+                    <button
+                      key={company._id}
+                      type="button"
+                      className={`profile-company-option ${selectedCompany?._id === company._id ? 'active' : ''}`}
+                      onClick={() => handleCompanySelect(company)}
+                    >
+                      <span className="profile-company-option-name">{company.name}</span>
+                      {Array.isArray(company.emailDomains) && company.emailDomains.length > 0 && (
+                        <span className="profile-company-option-domain">{company.emailDomains[0]}</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {canCreateCompany && (
+                <button
+                  type="button"
+                  className="profile-company-create"
+                  onClick={handleCreateCompany}
+                  disabled={companyActionLoading}
+                >
+                  {companyActionLoading ? 'Adding company...' : `Add "${companyQueryTrimmed}"`}
+                </button>
+              )}
+
+              <span className="profile-field-help">
+                Select your employer from the list or add it if it does not exist yet.
+              </span>
+            </div>
+          )}
 
           <div className="form-group profile-field-full">
             <label htmlFor="profile-tagline" className="form-label">Tagline</label>

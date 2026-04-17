@@ -140,6 +140,20 @@ router.post('/referrals', protect, requireRole('jobseeker'), async (req, res) =>
   }
 
   const employee = await Employee.findById(employeeId).populate('clubs');
+  if (!employee) {
+    return res.status(404).json({ message: 'Employee not found' });
+  }
+
+  if (!employee.isCompanyEmailVerified) {
+    return res.status(403).json({
+      message: 'This employee is not yet verified and cannot receive referral requests right now.',
+    });
+  }
+
+  const resolvedCompanyId = companyId || employee.company?._id || employee.company;
+  if (!resolvedCompanyId) {
+    return res.status(400).json({ message: 'This employee profile is missing a company. Ask them to update their company first.' });
+  }
 
   // Priority score: base + club overlap bonus
   const jsClubIds = new Set(jobseeker.clubs.map((c) => c._id.toString()));
@@ -150,7 +164,7 @@ router.post('/referrals', protect, requireRole('jobseeker'), async (req, res) =>
   const referral = await Referral.create({
     jobseeker: req.user._id,
     employee: employeeId,
-    company: companyId,
+    company: resolvedCompanyId,
     jobTitle,
     jobUrl,
     jobId,
@@ -179,7 +193,10 @@ router.get('/recommendations', protect, requireRole('jobseeker'), async (req, re
   const jsConnectionIds = new Set(jobseeker.connections.map((c) => c.linkedinId));
   const targetCompanyIds = new Set(jobseeker.targetCompanies.map((c) => c._id.toString()));
 
-  const employees = await Employee.find()
+  const employees = await Employee.find({
+    company: { $exists: true, $ne: null },
+    isCompanyEmailVerified: true,
+  })
     .populate('company', 'name logoUrl')
     .lean();
 

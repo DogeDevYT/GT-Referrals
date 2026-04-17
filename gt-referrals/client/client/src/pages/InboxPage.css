@@ -90,3 +90,23 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+@media (max-width: 700px) {
+  .inbox-header {
+    margin-bottom: 1.2rem;
+  }
+
+  .inbox-badge-wrap {
+    padding-top: 0;
+  }
+
+  .inbox-filters {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .credits-pill {
+    width: 100%;
+    justify-content: center;
+  }
+}

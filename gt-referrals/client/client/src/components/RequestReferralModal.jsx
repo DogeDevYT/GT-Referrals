@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 import './RequestReferralModal.css';
 
 export default function RequestReferralModal({ employee, onClose, onSuccess }) {
-  const navigate = useNavigate();
   const { refreshUser } = useAuth();
   const [form, setForm] = useState({
     jobTitle: '',
@@ -16,6 +15,15 @@ export default function RequestReferralModal({ employee, onClose, onSuccess }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
 
   const handle = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -43,7 +51,7 @@ export default function RequestReferralModal({ employee, onClose, onSuccess }) {
     }
   };
 
-  return (
+  const modalContent = (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal fade-in">
         <div className="modal-header">
@@ -133,4 +141,10 @@ export default function RequestReferralModal({ employee, onClose, onSuccess }) {
       </div>
     </div>
   );
+
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  return createPortal(modalContent, document.body);
 }
