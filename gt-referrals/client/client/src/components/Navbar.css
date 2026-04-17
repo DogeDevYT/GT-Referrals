@@ -84,3 +84,11 @@
   transition: opacity var(--transition);
 }
 .navbar-avatar:hover { opacity: 0.85; }
+
+.navbar-avatar-link {
+  border: 2px solid transparent;
+}
+
+.navbar-avatar-active {
+  border-color: rgba(0, 48, 87, 0.32);
+}
