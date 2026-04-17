@@ -50,10 +50,8 @@ export default function RegisterPage() {
         <h1 className="auth-title">Create an account</h1>
         <p className="auth-subtitle">Join the GT referral network</p>
 
-        {/* Role Toggle */}
         <div className="role-toggle">
           <button
-            id="role-jobseeker"
             type="button"
             className={`role-tab ${role === 'jobseeker' ? 'active' : ''}`}
             onClick={() => setRole('jobseeker')}
@@ -62,7 +60,6 @@ export default function RegisterPage() {
           </button>
           
           <button
-            id="role-employee"
             type="button"
             className={`role-tab ${role === 'employee' ? 'active' : ''}`}
             onClick={() => setRole('employee')}

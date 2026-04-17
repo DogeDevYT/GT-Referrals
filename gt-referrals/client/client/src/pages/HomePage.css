@@ -239,3 +239,9 @@
 .home-content button:not(.btn-primary) {
   border: 1px solid var(--border-color) !important;
 }
+
+.dark .home-page-landing,
+[data-theme="dark"] .home-page-landing {
+  background-image: none !important; 
+  background-color: #0f172a !important; 
+}

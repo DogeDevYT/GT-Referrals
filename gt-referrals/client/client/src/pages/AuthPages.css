@@ -169,3 +169,36 @@ body.dark .role-toggle .role-tab.active {
   text-align: center;
   margin-top: -0.5rem;
 }
+
+
+.role-tab {
+  color: #003057; /* Navy text when not selected */
+}
+
+.role-tab.active {
+  background-color: #003057 !important; 
+  color: #ffffff !important;           
+}
+
+.dark .role-tab, 
+[data-theme="dark"] .role-tab {
+  color: #cbd5e1; 
+}
+
+.dark .role-tab.active,
+[data-theme="dark"] .role-tab.active {
+  background-color: #ffffff !important;
+}
+
+
+.dark .role-tab.active span,
+[data-theme="dark"] .role-tab.active span {
+  color: #003057 !important;
+  font-weight: 700 !important;
+}
+
+
+.dark .role-tab:not(.active) span,
+[data-theme="dark"] .role-tab:not(.active) span {
+  color: #cbd5e1 !important;
+}

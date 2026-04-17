@@ -148,6 +148,29 @@
   height: 100%;
 }
 
+
+.dark .hero-feature,
+[data-theme="dark"] .hero-feature {
+  background: #003057 !important;       
+  border-color: #004a85 !important;    
+}
+
+
+.dark .hero-feature-title,
+[data-theme="dark"] .hero-feature-title,
+.dark .hero-feature h3,
+[data-theme="dark"] .hero-feature h3 {
+  color: #ffffff !important;
+}
+
+
+.dark .hero-feature-text,
+[data-theme="dark"] .hero-feature-text,
+.dark .hero-feature p,
+[data-theme="dark"] .hero-feature p {
+  color: #cbd5e1 !important; 
+}
+
 .hero-feature:hover {
   background: rgba(255, 255, 255, 0.96);
   transform: translateY(-2px);

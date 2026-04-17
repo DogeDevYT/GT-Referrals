@@ -52,21 +52,9 @@ export default function Navbar() {
         )}
 
         <div className="navbar-right">
-
           {user ? (
             <div className="navbar-user-menu">
-              <Link
-                to="/profile"
-                className={`avatar navbar-avatar navbar-avatar-link ${isActive('/profile') ? 'navbar-avatar-active' : ''}`}
-                title="Edit profile"
-              >
-                {profilePhoto
-                  ? <img src={profilePhoto} alt={user.name} />
-                  : initials}
-              </Link>
-              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
-                Sign out
-              </button>
+               {/* ... avatar and sign out button ... */}
             </div>
           ) : (
             <div className="navbar-auth-links">
@@ -75,7 +63,10 @@ export default function Navbar() {
             </div>
           )}
 
-          <ThemeToggle />
+          {/* Wrap it in this div so the CSS can control its position */}
+          <div className="theme-toggle-container">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </nav>

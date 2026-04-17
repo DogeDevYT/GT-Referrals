@@ -67,7 +67,6 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <ThemeToggle />
         <AppRoutes />
       </Router>
     </AuthProvider>
