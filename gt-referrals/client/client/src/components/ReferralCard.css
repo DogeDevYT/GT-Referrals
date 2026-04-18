@@ -159,26 +159,14 @@
 }
 
 .dark .referral-card a {
-  color: #ffffff !important; /* Pure white */
-  text-decoration: underline !important; /* Keeps it obviously clickable */
+  color: #ffffff !important; 
+  text-decoration: underline !important; 
   transition: color 0.2s ease;
 }
 
 .dark .referral-card a:hover {
-  color: #eaaa00 !important; /* Turns GT Gold on hover for a nice touch */
+  color: #eaaa00 !important; 
 }
 
-/* 2. Fix the White Message Box */
-/* NOTE: Replace '.message-box' with the actual class name of that white container */
-.dark .referral-card .message-box {
-  background-color: #001f3f !important; /* The recessed extra-dark navy we used for inputs */
-  color: #cbd5e1 !important; /* Soft gray-blue text */
-  border: 1px solid #004a85 !important;
-}
 
-/* Ensure the italic text inside stays readable */
-.dark .referral-card .message-box p,
-.dark .referral-card .message-box i,
-.dark .referral-card .message-box span {
-  color: #cbd5e1 !important; 
-}
+
