@@ -28,7 +28,7 @@ router.get('/me', protect, requireRole('jobseeker'), async (req, res) => {
 
 // Update profile / manual resume
 router.patch('/me', protect, requireRole('jobseeker'), async (req, res) => {
-  const allowed = ['name', 'tagline', 'targetRoles', 'resume'];
+  const allowed = ['name', 'tagline', 'targetRoles', 'resume', 'themePreference'];
   const updates = pickAllowedFields(req.body, allowed);
   const { updates: normalizedUpdates, error } = normalizeCommonProfileFields(updates);
 

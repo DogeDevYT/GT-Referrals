@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema(
     tagline: { type: String, trim: true, maxlength: 140, default: '' },
     profilePhoto: { type: String, default: '' },
     profilePhotoPublicId: { type: String, select: false },
+    themePreference: { type: String, enum: ['light', 'dark'], default: 'light' },
 
     // LinkedIn OAuth
     linkedinId: { type: String, unique: true, sparse: true },
