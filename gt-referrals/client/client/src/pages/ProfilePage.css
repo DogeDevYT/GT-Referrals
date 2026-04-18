@@ -236,3 +236,76 @@
     width: 100%;
   }
 }
+
+.dark .profile-page .profile-header h1 {
+  color: #ffffff !important;
+}
+.dark .profile-page .profile-header p {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .profile-page .card,
+.dark .profile-photo-card {
+  background: #003057 !important; 
+  border: 1px solid #004a85 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+.dark .profile-page .card h1,
+.dark .profile-page .card h2,
+.dark .profile-page .card h3,
+.dark .profile-page .card label {
+  color: #ffffff !important;
+}
+
+
+.dark .profile-page .card p,
+.dark .profile-page .card span,
+.dark .profile-page .card .help-text {
+  color: #cbd5e1 !important;
+}
+
+
+.dark .profile-page .card button {
+  background-color: #001f3f !important; 
+  color: #ffffff !important;
+  border: 1px solid #004a85 !important; 
+  transition: background-color 0.2s ease;
+}
+
+
+.dark .profile-page .card button:hover {
+  background-color: #004a85 !important; 
+}
+
+
+.dark .profile-page .card button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background-color: transparent !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
+}
+
+.dark .profile-page .card .profile-photo-picker {
+  background-color: #eaaa00 !important; 
+  color: #003057 !important; 
+  border: none !important;
+  font-weight: bold !important;
+  transition: background-color 0.2s ease;
+}
+
+.dark .profile-page .card .profile-photo-picker:hover {
+  background-color: #f2c75c !important; 
+}
+
+.dark .profile-page .profile-role-badge {
+  background-color: #003057 !important; 
+  color: #ffffff !important; 
+  border: 1px solid #004a85 !important; 
+  font-weight: 500 !important; 
+}
+
+

@@ -64,3 +64,13 @@
 @media (max-width: 500px) {
   .find-alumni-grid { grid-template-columns: 1fr; }
 }
+
+
+.dark .find-alumni-header h1 {
+  color: #ffffff !important;
+}
+
+
+.dark .find-alumni-header p {
+  color: #cbd5e1 !important; 
+}

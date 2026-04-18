@@ -247,4 +247,25 @@
 }
 
 
+.dark .home-stat-card {
+  background-color: #003057 !important; 
+  border: 1px solid #004a85 !important; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important; 
+}
+
+
+.dark .home-stat-card h2,
+.dark .home-stat-card h3,
+.dark .home-stat-card strong,
+.dark .home-stat-card .stat-value {
+  color: #ffffff !important;
+}
+
+
+.dark .home-stat-card p,
+.dark .home-stat-card span,
+.dark .home-stat-card .stat-label {
+  color: #cbd5e1 !important; 
+}
+
 

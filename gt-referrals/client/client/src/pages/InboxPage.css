@@ -110,3 +110,28 @@
     justify-content: center;
   }
 }
+
+
+
+.dark .inbox-header h1 {
+  color: #ffffff !important;
+}
+
+
+.dark .inbox-header p {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .empty-state h2,
+.dark .empty-state h3,
+.dark .empty-state strong,
+.dark .empty-state h4 {
+  color: #ffffff !important;
+}
+
+
+.dark .empty-state p,
+.dark .empty-state span {
+  color: #94a3b8 !important; 
+}

@@ -53,8 +53,23 @@ export default function Navbar() {
 
         <div className="navbar-right">
           {user ? (
-            <div className="navbar-user-menu">
-               {/* ... avatar and sign out button ... */}
+            <div className="navbar-user-menu flex items-center gap-3">
+              <Link
+                to="/profile"
+                className="avatar navbar-avatar navbar-avatar-link"
+                title="Edit profile"
+              >
+                {profilePhoto ? (
+                  <img src={profilePhoto} alt={user.name} />
+                ) : (
+                  <div className="initials-fallback">
+                    {initials}
+                  </div>
+                )}
+              </Link>
+              <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
+                Sign out
+              </button>
             </div>
           ) : (
             <div className="navbar-auth-links">
