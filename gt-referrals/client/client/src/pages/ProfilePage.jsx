@@ -45,6 +45,8 @@ export default function ProfilePage() {
   const [clubs, setClubs] = useState([]);
   const [clubsLoading, setClubsLoading] = useState(false);
   const [clubActionLoadingId, setClubActionLoadingId] = useState('');
+  const [newClubName, setNewClubName] = useState('');
+  const [addingClub, setAddingClub] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -355,6 +357,41 @@ export default function ProfilePage() {
     }
   };
 
+  const reloadClubs = async () => {
+    try {
+      const { data } = await api.get('/clubs');
+      setClubs(Array.isArray(data) ? data : []);
+    } catch {
+      setClubs([]);
+    }
+  };
+
+  const handleAddClub = async () => {
+    const name = newClubName.trim();
+    if (!name) return;
+
+    setAddingClub(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const { data } = await api.post('/clubs', { name });
+      const clubId = data?.club?._id;
+      if (!clubId) {
+        throw new Error('Club was not returned');
+      }
+
+      await api.post(`/clubs/${clubId}/join`);
+      await Promise.all([refreshUser(), reloadClubs()]);
+      setNewClubName('');
+      setSuccess(data.created ? 'Club created and joined.' : 'Joined existing club.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Could not add and join club right now.');
+    } finally {
+      setAddingClub(false);
+    }
+  };
+
   return (
     <div className="page-wrapper profile-page fade-in">
       <div className="profile-header">
@@ -574,6 +611,24 @@ export default function ProfilePage() {
             <span className="profile-field-help">
               Join clubs to improve recommendation matching and referral priority with shared members.
             </span>
+
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+              <input
+                className="form-input"
+                placeholder="Add a club name"
+                value={newClubName}
+                onChange={(event) => setNewClubName(event.target.value)}
+                maxLength={120}
+              />
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={handleAddClub}
+                disabled={addingClub || !newClubName.trim()}
+              >
+                {addingClub ? 'Adding...' : 'Add Club'}
+              </button>
+            </div>
 
             {clubsLoading && (
               <div className="profile-clubs-loading">Loading clubs...</div>

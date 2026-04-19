@@ -5,6 +5,9 @@ import Employee from '../models/Employee.js';
 import { protect } from '../middleware/auth.js';
 
 const router = Router();
+const DEFAULT_PRIORITY_WEIGHT = 1;
+const normalizeClubName = (value) => value.replace(/\s+/g, ' ').trim();
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const getModelByRole = (role) => {
   if (role === 'jobseeker') return Jobseeker;
@@ -19,6 +22,30 @@ router.get('/', protect, async (_req, res) => {
     .lean();
 
   res.json(clubs);
+});
+
+router.post('/', protect, async (req, res) => {
+  const rawName = typeof req.body?.name === 'string' ? req.body.name : '';
+  const name = normalizeClubName(rawName);
+
+  if (!name) {
+    return res.status(400).json({ message: 'Club name is required' });
+  }
+
+  const existingClub = await Club.findOne({
+    name: { $regex: `^${escapeRegex(name)}$`, $options: 'i' },
+  });
+
+  if (existingClub) {
+    return res.json({ club: existingClub, created: false });
+  }
+
+  const club = await Club.create({
+    name,
+    priorityWeight: DEFAULT_PRIORITY_WEIGHT,
+  });
+
+  return res.status(201).json({ club, created: true });
 });
 
 router.post('/:clubId/join', protect, async (req, res) => {
