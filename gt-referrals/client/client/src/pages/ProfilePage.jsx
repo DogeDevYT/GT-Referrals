@@ -31,7 +31,7 @@ function buildInitialForm(user) {
 }
 
 export default function ProfilePage() {
-  const { user, updateProfile, uploadProfilePhoto } = useAuth();
+  const { user, updateProfile, uploadProfilePhoto, refreshUser } = useAuth();
   const [form, setForm] = useState(() => buildInitialForm(user));
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState('');
@@ -42,6 +42,11 @@ export default function ProfilePage() {
   const [companyActionLoading, setCompanyActionLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [clubs, setClubs] = useState([]);
+  const [clubsLoading, setClubsLoading] = useState(false);
+  const [clubActionLoadingId, setClubActionLoadingId] = useState('');
+  const [newClubName, setNewClubName] = useState('');
+  const [addingClub, setAddingClub] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -117,6 +122,33 @@ export default function ProfilePage() {
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedPhoto]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadClubs = async () => {
+      setClubsLoading(true);
+      try {
+        const { data } = await api.get('/clubs');
+        if (!cancelled) {
+          setClubs(Array.isArray(data) ? data : []);
+        }
+      } catch {
+        if (!cancelled) {
+          setClubs([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setClubsLoading(false);
+        }
+      }
+    };
+
+    loadClubs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const initials = useMemo(() => {
     if (!user?.name) return '?';
     return user.name
@@ -129,6 +161,9 @@ export default function ProfilePage() {
   }, [user?.name]);
 
   const resolvedPhoto = photoPreviewUrl || user?.profilePhoto || user?.linkedin?.photo || '';
+  const selectedClubIds = new Set((user?.clubs || []).map((club) => (
+    typeof club === 'object' ? club._id : club
+  )).filter(Boolean));
   const companyQueryTrimmed = companyQuery.trim();
   const normalizedCompanyQuery = companyQueryTrimmed.toLowerCase();
   const hasExactCompanyMatch = normalizedCompanyQuery && companyOptions.some((company) =>
@@ -298,6 +333,62 @@ export default function ProfilePage() {
       setError(err.response?.data?.message || 'Could not upload your profile photo. Please try again.');
     } finally {
       setUploadingPhoto(false);
+    }
+  };
+
+  const handleClubToggle = async (clubId, shouldJoin) => {
+    setClubActionLoadingId(clubId);
+    setError('');
+    setSuccess('');
+
+    try {
+      if (shouldJoin) {
+        await api.post(`/clubs/${clubId}/join`);
+        setSuccess('Club joined.');
+      } else {
+        await api.delete(`/clubs/${clubId}/leave`);
+        setSuccess('Club left.');
+      }
+      await refreshUser();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Could not update clubs right now.');
+    } finally {
+      setClubActionLoadingId('');
+    }
+  };
+
+  const reloadClubs = async () => {
+    try {
+      const { data } = await api.get('/clubs');
+      setClubs(Array.isArray(data) ? data : []);
+    } catch {
+      setClubs([]);
+    }
+  };
+
+  const handleAddClub = async () => {
+    const name = newClubName.trim();
+    if (!name) return;
+
+    setAddingClub(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const { data } = await api.post('/clubs', { name });
+      const clubId = data?.club?._id;
+      if (!clubId) {
+        throw new Error('Club was not returned');
+      }
+
+      await api.post(`/clubs/${clubId}/join`);
+      await Promise.all([refreshUser(), reloadClubs()]);
+      setNewClubName('');
+      setSuccess(data.created ? 'Club created and joined.' : 'Joined existing club.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Could not add and join club right now.');
+    } finally {
+      setAddingClub(false);
     }
   };
 
@@ -514,6 +605,66 @@ export default function ProfilePage() {
               <span className="profile-field-help">Separate multiple roles with commas.</span>
             </div>
           )}
+
+          <div className="form-group profile-field-full">
+            <label className="form-label">Clubs</label>
+            <span className="profile-field-help">
+              Join clubs to improve recommendation matching and referral priority with shared members.
+            </span>
+
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+              <input
+                className="form-input"
+                placeholder="Add a club name"
+                value={newClubName}
+                onChange={(event) => setNewClubName(event.target.value)}
+                maxLength={120}
+              />
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={handleAddClub}
+                disabled={addingClub || !newClubName.trim()}
+              >
+                {addingClub ? 'Adding...' : 'Add Club'}
+              </button>
+            </div>
+
+            {clubsLoading && (
+              <div className="profile-clubs-loading">Loading clubs...</div>
+            )}
+
+            {!clubsLoading && clubs.length === 0 && (
+              <div className="profile-clubs-empty">No clubs available right now.</div>
+            )}
+
+            {!clubsLoading && clubs.length > 0 && (
+              <div className="profile-clubs-list">
+                {clubs.map((club) => {
+                  const isMember = selectedClubIds.has(club._id);
+                  const isLoading = clubActionLoadingId === club._id;
+                  return (
+                    <div key={club._id} className="profile-club-item">
+                      <div className="profile-club-main">
+                        <span className="profile-club-name">{club.name}</span>
+                        <span className="profile-club-weight">
+                          Weight +{club.priorityWeight ?? 0}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={`btn btn-sm ${isMember ? 'btn-outline' : 'btn-primary'}`}
+                        disabled={Boolean(clubActionLoadingId)}
+                        onClick={() => handleClubToggle(club._id, !isMember)}
+                      >
+                        {isLoading ? 'Saving...' : isMember ? 'Leave' : 'Join'}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           <div className="profile-actions">
             <button type="submit" className="btn btn-primary" disabled={saving}>
