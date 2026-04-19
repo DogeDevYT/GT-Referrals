@@ -101,6 +101,7 @@ router.post('/companies', protect, requireRole('employee'), async (req, res) => 
 router.get('/me', protect, requireRole('employee'), async (req, res) => {
   const employee = await Employee.findById(req.user._id)
     .populate('company', 'name logoUrl')
+    .populate('clubs', 'name logoUrl priorityWeight')
     .populate('referrals');
   res.json(employee);
 });
@@ -170,6 +171,7 @@ router.patch('/me', protect, requireRole('employee'), async (req, res) => {
     runValidators: true,
   })
     .populate('company', 'name logoUrl')
+    .populate('clubs', 'name logoUrl priorityWeight')
     .populate('referrals');
 
   res.json(employee);
@@ -208,6 +210,7 @@ router.post('/me/photo', protect, requireRole('employee'), uploadProfilePhoto, a
 
     const updatedEmployee = await Employee.findById(req.user._id)
       .populate('company', 'name logoUrl')
+      .populate('clubs', 'name logoUrl priorityWeight')
       .populate('referrals');
 
     res.json({
