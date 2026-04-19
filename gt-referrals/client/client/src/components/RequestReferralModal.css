@@ -72,3 +72,71 @@
     width: 100%;
   }
 }
+
+
+.dark .modal {
+  background-color: #003057 !important;
+  border: 1px solid #004a85 !important; 
+}
+
+
+.dark .modal h1,
+.dark .modal h2,
+.dark .modal h3 {
+  color: #ffffff !important;
+}
+
+.dark .modal p,
+.dark .modal span,
+.dark .modal label {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .modal input,
+.dark .modal textarea {
+  background-color: #001f3f !important; 
+  color: #ffffff !important;
+  border: 1px solid #004a85 !important;
+}
+
+
+.dark .modal input::placeholder,
+.dark .modal textarea::placeholder {
+  color: #94a3b8 !important; 
+}
+
+
+.dark .modal button {
+  background-color: #001f3f !important; 
+  color: #ffffff !important;
+  border: 1px solid #004a85 !important; 
+  transition: background-color 0.2s ease;
+}
+
+
+.dark .modal button:hover {
+  background-color: #004a85 !important; 
+}
+
+
+.dark .modal .close-button,
+.dark .modal button[aria-label="Close"] {
+  background-color: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+
+.dark .modal .close-button,
+.dark .modal button[aria-label="Close"] {
+  color: #ffffff !important;
+}
+
+.modal-actions {
+  display: flex !important;
+  justify-content: center !important; 
+  flex-direction: row-reverse !important; 
+  gap: 1rem; 
+  width: 100%;
+}

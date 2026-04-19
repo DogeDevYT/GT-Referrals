@@ -50,26 +50,24 @@ export default function RegisterPage() {
         <h1 className="auth-title">Create an account</h1>
         <p className="auth-subtitle">Join the GT referral network</p>
 
-        {/* Role Toggle */}
         <div className="role-toggle">
           <button
-            id="role-jobseeker"
             type="button"
             className={`role-tab ${role === 'jobseeker' ? 'active' : ''}`}
             onClick={() => setRole('jobseeker')}
           >
-            🎓 GT Student
+            <span>🎓 GT Student</span>
           </button>
+          
           <button
-            id="role-employee"
             type="button"
             className={`role-tab ${role === 'employee' ? 'active' : ''}`}
             onClick={() => setRole('employee')}
           >
-            💼 GT Alumni / Employee
+            <span>💼 GT Alumni / Employee</span>
           </button>
         </div>
-
+        
         <p className="role-hint">
           {role === 'jobseeker'
             ? 'You need a @gatech.edu email to register as a student.'

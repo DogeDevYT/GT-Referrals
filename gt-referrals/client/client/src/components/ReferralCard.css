@@ -121,3 +121,52 @@
     width: 100%;
   }
 }
+
+
+.dark .referral-card {
+  background-color: #003057 !important; 
+  border: 1px solid #004a85 !important; 
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+.dark .referral-card h1,
+.dark .referral-card h2,
+.dark .referral-card h3,
+.dark .referral-card h4,
+.dark .referral-card strong,
+.dark .referral-card .referral-card-name {  
+  color: #ffffff !important;
+}
+
+
+.dark .referral-card p,
+.dark .referral-card span {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .referral-card .badge, 
+.dark .referral-card button:not(.btn-primary) {
+  background-color: #001f3f !important; 
+  color: #cbd5e1 !important;
+  border: 1px solid #004a85 !important;
+}
+
+
+.dark .referral-card .status-pending {
+  color: #fcd34d !important; 
+}
+
+.dark .referral-card a {
+  color: #ffffff !important; 
+  text-decoration: underline !important; 
+  transition: color 0.2s ease;
+}
+
+.dark .referral-card a:hover {
+  color: #eaaa00 !important; 
+}
+
+
+

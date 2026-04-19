@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from '../components/ThemeToggle';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -51,15 +53,19 @@ export default function Navbar() {
 
         <div className="navbar-right">
           {user ? (
-            <div className="navbar-user-menu">
+            <div className="navbar-user-menu flex items-center gap-3">
               <Link
                 to="/profile"
-                className={`avatar navbar-avatar navbar-avatar-link ${isActive('/profile') ? 'navbar-avatar-active' : ''}`}
+                className="avatar navbar-avatar navbar-avatar-link"
                 title="Edit profile"
               >
-                {profilePhoto
-                  ? <img src={profilePhoto} alt={user.name} />
-                  : initials}
+                {profilePhoto ? (
+                  <img src={profilePhoto} alt={user.name} />
+                ) : (
+                  <div className="initials-fallback">
+                    {initials}
+                  </div>
+                )}
               </Link>
               <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
                 Sign out
@@ -71,6 +77,11 @@ export default function Navbar() {
               <Link to="/register" className="btn btn-primary btn-sm">Get started</Link>
             </div>
           )}
+
+          {/* Wrap it in this div so the CSS can control its position */}
+          <div className="theme-toggle-container">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </nav>

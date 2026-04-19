@@ -107,7 +107,7 @@ router.get('/me', protect, requireRole('employee'), async (req, res) => {
 
 // Update employee profile
 router.patch('/me', protect, requireRole('employee'), async (req, res) => {
-  const allowed = ['name', 'jobTitle', 'department', 'companyEmail', 'companyId', 'tagline'];
+  const allowed = ['name', 'jobTitle', 'department', 'companyEmail', 'companyId', 'tagline', 'themePreference'];
   const updates = pickAllowedFields(req.body, allowed);
   const { updates: normalizedUpdates, error } = normalizeCommonProfileFields(updates);
 

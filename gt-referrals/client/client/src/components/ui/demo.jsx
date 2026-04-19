@@ -59,16 +59,23 @@ export function BlurFadeTextDemo() {
 
           <BlurFade delay={0.3} inView>
             <div className="hero-cta-row">
-              <Link
-                to="/register"
-                className="hero-btn hero-btn-primary"
+              <Link 
+                to="/register" 
+                className="btn border-none hover:opacity-90"
+                style={{ backgroundColor: '#003057'}}
               >
-                Join GT Referrals
-                <ArrowRight size={16} strokeWidth={2.35} />
+                <span 
+                  className="flex items-center justify-center gap-2 whitespace-nowrap" 
+                  style={{ color: '#ffffff', pointerEvents: 'none' }}
+                >
+                  Join GT Referrals 
+                  <ArrowRight size={16} strokeWidth={2.35} />
+                </span>
+                
               </Link>
-              <Link
-                to="/login"
-                className="hero-btn hero-btn-secondary"
+              <Link 
+                to="/login" 
+                className="btn bg-transparent border text-[#003057] hover:!bg-gray-500 dark:text-white dark:hover:bg-slate-600"
               >
                 Sign in
               </Link>

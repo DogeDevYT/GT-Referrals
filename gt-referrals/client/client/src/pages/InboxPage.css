@@ -110,3 +110,55 @@
     justify-content: center;
   }
 }
+
+
+
+.dark .inbox-header h1 {
+  color: #ffffff !important;
+}
+
+
+.dark .inbox-header p {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .empty-state h2,
+.dark .empty-state h3,
+.dark .empty-state strong,
+.dark .empty-state h4 {
+  color: #ffffff !important;
+}
+
+
+.dark .empty-state p,
+.dark .empty-state span {
+  color: #94a3b8 !important; 
+}
+
+.dark .btn.btn-outline:disabled {
+  color: white;
+  border-color: white;
+}
+
+.dark .referral-message {
+  background-color: #0B1B3D; 
+  color: white !important; 
+  border-left-color: #1E3A8A; 
+}
+
+.dark span.badge.badge-approved {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-color: transparent !important;
+}
+
+/* The Rejected Badge */
+.dark span.badge.badge-rejected {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border-color: transparent !important;
+}
+
+
+

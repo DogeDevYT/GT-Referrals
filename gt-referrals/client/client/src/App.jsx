@@ -10,6 +10,7 @@ import InboxPage from './pages/InboxPage';
 import MyRequestsPage from './pages/MyRequestsPage';
 import ProfilePage from './pages/ProfilePage';
 import './App.css';
+import ThemeToggle from './components/ThemeToggle';
 
 // Protected Route wrappers
 const ProtectedRoute = ({ children, requiredRole }) => {
