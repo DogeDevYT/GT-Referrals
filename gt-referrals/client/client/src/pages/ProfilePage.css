@@ -217,6 +217,41 @@
   justify-content: flex-end;
 }
 
+.profile-clubs-list {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-club-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.profile-club-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.profile-club-name {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.profile-club-weight,
+.profile-clubs-empty,
+.profile-clubs-loading {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
 @media (max-width: 760px) {
   .profile-form-card {
     padding: 1.5rem;
@@ -307,5 +342,4 @@
   border: 1px solid #004a85 !important; 
   font-weight: 500 !important; 
 }
-
 
