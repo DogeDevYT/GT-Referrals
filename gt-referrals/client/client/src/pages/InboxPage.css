@@ -1,0 +1,164 @@
+.inbox-header {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.inbox-header h1 {
+  margin-bottom: 0.375rem;
+}
+
+.inbox-badge-wrap {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-top: 0.5rem;
+}
+
+.inbox-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: var(--text-muted);
+}
+
+.inbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.inbox-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+  overflow-x: auto;
+}
+
+.filter-tab {
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.filter-tab:hover {
+  background: var(--bg);
+  color: var(--navy);
+}
+
+.filter-tab.active {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.credits-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: rgba(179, 163, 105, 0.15);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(179, 163, 105, 0.3);
+}
+
+.credits-icon {
+  font-size: 1.1rem;
+}
+
+.credits-value {
+  font-weight: 800;
+  color: var(--gold-dark);
+  font-size: 1.125rem;
+}
+
+.credits-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 700px) {
+  .inbox-header {
+    margin-bottom: 1.2rem;
+  }
+
+  .inbox-badge-wrap {
+    padding-top: 0;
+  }
+
+  .inbox-filters {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .credits-pill {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+
+.dark .inbox-header h1 {
+  color: #ffffff !important;
+}
+
+
+.dark .inbox-header p {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .empty-state h2,
+.dark .empty-state h3,
+.dark .empty-state strong,
+.dark .empty-state h4 {
+  color: #ffffff !important;
+}
+
+
+.dark .empty-state p,
+.dark .empty-state span {
+  color: #94a3b8 !important; 
+}
+
+.dark .btn.btn-outline:disabled {
+  color: white;
+  border-color: white;
+}
+
+.dark .referral-message {
+  background-color: #0B1B3D; 
+  color: white !important; 
+  border-left-color: #1E3A8A; 
+}
+
+.dark span.badge.badge-approved {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-color: transparent !important;
+}
+
+/* The Rejected Badge */
+.dark span.badge.badge-rejected {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border-color: transparent !important;
+}
+
+
+

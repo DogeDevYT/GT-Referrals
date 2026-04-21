@@ -4,6 +4,17 @@ import Employee from '../models/Employee.js';
 import Referral from '../models/Referral.js';
 import Club from '../models/Club.js';
 import { protect, requireRole } from '../middleware/auth.js';
+import { uploadProfilePhoto } from '../middleware/upload.js';
+import {
+  deleteCloudinaryAsset,
+  isCloudinaryConfigured,
+  uploadProfilePhotoToCloudinary,
+} from '../config/cloudinary.js';
+import {
+  normalizeCommonProfileFields,
+  normalizeTargetRoles,
+  pickAllowedFields,
+} from '../utils/profile.js';
 
 const router = Router();
 
@@ -17,13 +28,89 @@ router.get('/me', protect, requireRole('jobseeker'), async (req, res) => {
 
 // Update profile / manual resume
 router.patch('/me', protect, requireRole('jobseeker'), async (req, res) => {
-  const allowed = ['name', 'targetRoles', 'resume'];
-  const updates = Object.fromEntries(
-    Object.entries(req.body).filter(([k]) => allowed.includes(k))
-  );
-  if (updates.resume) updates['resume.source'] = 'manual';
-  const jobseeker = await Jobseeker.findByIdAndUpdate(req.user._id, updates, { new: true });
+  const allowed = ['name', 'tagline', 'targetRoles', 'resume', 'themePreference'];
+  const updates = pickAllowedFields(req.body, allowed);
+  const { updates: normalizedUpdates, error } = normalizeCommonProfileFields(updates);
+
+  if (error) {
+    return res.status(400).json({ message: error });
+  }
+
+  if (Object.prototype.hasOwnProperty.call(normalizedUpdates, 'targetRoles')) {
+    const { roles, error: targetRolesError } = normalizeTargetRoles(normalizedUpdates.targetRoles);
+    if (targetRolesError) {
+      return res.status(400).json({ message: targetRolesError });
+    }
+    normalizedUpdates.targetRoles = roles;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(normalizedUpdates, 'resume')) {
+    if (!normalizedUpdates.resume || typeof normalizedUpdates.resume !== 'object' || Array.isArray(normalizedUpdates.resume)) {
+      return res.status(400).json({ message: 'resume must be an object' });
+    }
+
+    normalizedUpdates.resume = {
+      ...normalizedUpdates.resume,
+      source: 'manual',
+    };
+  }
+
+  if (Object.keys(normalizedUpdates).length === 0) {
+    return res.status(400).json({ message: 'No profile fields provided to update' });
+  }
+
+  const jobseeker = await Jobseeker.findByIdAndUpdate(req.user._id, normalizedUpdates, {
+    new: true,
+    runValidators: true,
+  })
+    .populate('clubs', 'name logoUrl')
+    .populate('targetCompanies', 'name logoUrl');
+
   res.json(jobseeker);
+});
+
+router.post('/me/photo', protect, requireRole('jobseeker'), uploadProfilePhoto, async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'Please attach a photo file using the "photo" field' });
+  }
+
+  if (!isCloudinaryConfigured()) {
+    return res.status(503).json({ message: 'Profile photo uploads are not configured on this server' });
+  }
+
+  const jobseeker = await Jobseeker.findById(req.user._id).select('+profilePhotoPublicId');
+  if (!jobseeker) {
+    return res.status(404).json({ message: 'Jobseeker profile not found' });
+  }
+
+  const oldPublicId = jobseeker.profilePhotoPublicId;
+
+  try {
+    const { url, publicId } = await uploadProfilePhotoToCloudinary({
+      buffer: req.file.buffer,
+      mimeType: req.file.mimetype,
+      userId: req.user._id.toString(),
+    });
+
+    jobseeker.profilePhoto = url;
+    jobseeker.profilePhotoPublicId = publicId;
+    await jobseeker.save();
+
+    if (oldPublicId && oldPublicId !== publicId) {
+      await deleteCloudinaryAsset(oldPublicId);
+    }
+
+    const updatedJobseeker = await Jobseeker.findById(req.user._id)
+      .populate('clubs', 'name logoUrl')
+      .populate('targetCompanies', 'name logoUrl');
+
+    res.json({
+      photoUrl: updatedJobseeker.profilePhoto,
+      user: updatedJobseeker,
+    });
+  } catch {
+    res.status(500).json({ message: 'Could not upload profile photo right now' });
+  }
 });
 
 // Populate resume from LinkedIn data (already stored on user.linkedin)
@@ -53,6 +140,20 @@ router.post('/referrals', protect, requireRole('jobseeker'), async (req, res) =>
   }
 
   const employee = await Employee.findById(employeeId).populate('clubs');
+  if (!employee) {
+    return res.status(404).json({ message: 'Employee not found' });
+  }
+
+  if (!employee.isCompanyEmailVerified) {
+    return res.status(403).json({
+      message: 'This employee is not yet verified and cannot receive referral requests right now.',
+    });
+  }
+
+  const resolvedCompanyId = companyId || employee.company?._id || employee.company;
+  if (!resolvedCompanyId) {
+    return res.status(400).json({ message: 'This employee profile is missing a company. Ask them to update their company first.' });
+  }
 
   // Priority score: base + club overlap bonus
   const jsClubIds = new Set(jobseeker.clubs.map((c) => c._id.toString()));
@@ -63,7 +164,7 @@ router.post('/referrals', protect, requireRole('jobseeker'), async (req, res) =>
   const referral = await Referral.create({
     jobseeker: req.user._id,
     employee: employeeId,
-    company: companyId,
+    company: resolvedCompanyId,
     jobTitle,
     jobUrl,
     jobId,
@@ -84,7 +185,7 @@ router.post('/referrals', protect, requireRole('jobseeker'), async (req, res) =>
 });
 
 // Get recommended employees (connections algorithm)
-// Ranks employees by: shared clubs > shared LinkedIn connections > company match
+// Ranks employees by: shared clubs > shared LinkedIn connections > target company match
 router.get('/recommendations', protect, requireRole('jobseeker'), async (req, res) => {
   const jobseeker = await Jobseeker.findById(req.user._id).populate('clubs targetCompanies');
 
@@ -93,18 +194,24 @@ router.get('/recommendations', protect, requireRole('jobseeker'), async (req, re
   const targetCompanyIds = new Set(jobseeker.targetCompanies.map((c) => c._id.toString()));
 
   const employees = await Employee.find({
-    company: { $in: [...targetCompanyIds] },
+    company: { $exists: true, $ne: null },
+    isCompanyEmailVerified: true,
   })
     .populate('company', 'name logoUrl')
+    .populate('clubs', 'name priorityWeight')
     .lean();
 
   const scored = employees.map((emp) => {
-    const clubOverlap = (emp.clubs || []).filter((id) =>
-      jsClubIds.has(id.toString())
-    ).length;
+    const sharedClubs = (emp.clubs || []).filter((club) =>
+      jsClubIds.has(club._id.toString())
+    );
+    const sharedClubWeight = sharedClubs.reduce((sum, club) => sum + (club.priorityWeight || 0), 0);
     const isConnection = jsConnectionIds.has(emp.linkedinId);
-    const score = clubOverlap * 3 + (isConnection ? 5 : 0);
-    return { ...emp, recommendationScore: score };
+    const isTarget = emp.company && targetCompanyIds.has(emp.company._id.toString());
+    
+    // Shared clubs should boost recommendations, alongside connection + target matches
+    const score = sharedClubWeight + (isConnection ? 5 : 0) + (isTarget ? 4 : 0);
+    return { ...emp, recommendationScore: score, sharedClubs };
   });
 
   scored.sort((a, b) => b.recommendationScore - a.recommendationScore);

@@ -15,6 +15,21 @@ A platform connecting Georgia Tech students (**Jobseekers**) with GT alumni work
 | **Company** | An employer with one or more verified email domains (e.g. `google.com`). Used to verify Employee registration. |
 | **Connections** | LinkedIn connections pulled via OAuth. The recommendation algorithm surfaces Employees who share connections or clubs with the Jobseeker. |
 
+## Systems Architecture
+
+```mermaid
+graph TD
+    User([End User]) -->|Browser| CF["Cloudflare Pages<br/>(React / Vite Frontend)"]
+    
+    CF -->|Axios REST / HTTPS| Render["Render.com<br/>(Node.js / Express Backend)"]
+    CF -->|Login Redirect| LinkedIn_OAuth["LinkedIn OAuth API"]
+    
+    Render -->|Mongoose TCP| Mongo[("MongoDB Atlas")]
+    Render <-->|OIDC Token Exchange| LinkedIn_OAuth
+    
+    Render -.->|Callback Redirect| CF
+```
+
 ## Getting Started
 
 ### 1. Prerequisites
@@ -53,6 +68,9 @@ LINKEDIN_CLIENT_SECRET=your_linkedin_app_client_secret
 LINKEDIN_CALLBACK_URL=http://localhost:5000/api/auth/linkedin/callback
 JWT_SECRET=a_random_secret_string
 CLIENT_URL=http://localhost:5173
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
 ### 4. Running the App
@@ -66,7 +84,40 @@ npm run dev
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5000
 
-### 5. Backend Structure
+### 5. Testing with Mock Data
+
+To help with testing the referral flow, several fictional FAANG employee accounts have been seeded into the database. You can log into any of these accounts using the generic password: `password123`.
+
+- **Google**: `sundar@google.com`, `ada@google.com`
+- **Apple**: `tim@apple.com`, `alan@apple.com`
+- **Meta**: `mark@meta.com`
+- **Amazon**: `jeff@amazon.com`
+- **Netflix**: `reed@netflix.com`
+
+---
+
+### 6. Deployment
+
+This repository is configured for a modern, decoupled serverless/PaaS deployment architecture:
+
+#### Frontend (Cloudflare Pages)
+1. In Cloudflare, navigate to **Pages** -> **Connect to Git** and select this repository.
+2. Build Settings:
+   - Framework preset: `Vite`
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+   - Root directory: `gt-referrals/client/client`
+3. Add `VITE_API_URL` to the environment variables, pointing to your live backend URL (e.g., `https://your-api.onrender.com/api`).
+
+#### Backend (Render.com)
+The backend is completely fully configured with Infrastructure-as-Code via the included `render.yaml` blueprint.
+1. In Render, select **New +** -> **Blueprint**.
+2. Connect this repository. Render will automatically provision the Node.js Web Service on their free tier.
+3. In the Render Dashboard under **Environment**, fill in your missing production variables (`MONGO_URI`, `JWT_SECRET`, `LINKEDIN_CLIENT_ID`, etc.).
+
+---
+
+### 7. Backend Structure
 
 ```
 server/
@@ -99,10 +150,16 @@ server/
 | `POST` | `/api/auth/register/jobseeker` | — | Register as Jobseeker |
 | `POST` | `/api/auth/login` | — | Email/password login |
 | `GET` | `/api/employees/me` | Employee | Get own profile |
+| `PATCH` | `/api/employees/me` | Employee | Update own profile fields (name, title, department, tagline) |
+| `POST` | `/api/employees/me/photo` | Employee | Upload or replace profile photo |
+| `GET` | `/api/employees/companies?q=<query>` | Employee | Search companies for profile linking |
+| `POST` | `/api/employees/companies` | Employee | Create company if missing and return selection target |
 | `GET` | `/api/employees/referrals/pending` | Employee | Pending referral queue (sorted by priority) |
 | `PATCH` | `/api/employees/referrals/:id/approve` | Employee | Approve referral (earn credits) |
 | `PATCH` | `/api/employees/referrals/:id/reject` | Employee | Reject referral (refund Jobseeker) |
 | `GET` | `/api/jobseekers/me` | Jobseeker | Get own profile |
+| `PATCH` | `/api/jobseekers/me` | Jobseeker | Update own profile fields (name, tagline, roles, resume) |
+| `POST` | `/api/jobseekers/me/photo` | Jobseeker | Upload or replace profile photo |
 | `POST` | `/api/jobseekers/referrals` | Jobseeker | Request a referral (spend credits) |
 | `POST` | `/api/jobseekers/me/resume/from-linkedin` | Jobseeker | Populate resume from LinkedIn data |
 | `GET` | `/api/jobseekers/recommendations` | Jobseeker | Recommended Employees (by clubs + connections) |

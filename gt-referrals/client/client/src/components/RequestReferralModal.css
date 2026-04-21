@@ -1,0 +1,142 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  line-height: 1.45;
+}
+
+.modal-close {
+  font-size: 1rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background var(--transition), color var(--transition);
+  line-height: 1;
+  border: none;
+  background: none;
+}
+.modal-close:hover {
+  background: var(--bg);
+  color: var(--navy);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-top: 0.1rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 560px) {
+  .modal-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .modal-subtitle {
+    font-size: 0.82rem;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 0.55rem;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+}
+
+
+.dark .modal {
+  background-color: #003057 !important;
+  border: 1px solid #004a85 !important; 
+}
+
+
+.dark .modal h1,
+.dark .modal h2,
+.dark .modal h3 {
+  color: #ffffff !important;
+}
+
+.dark .modal p,
+.dark .modal span,
+.dark .modal label {
+  color: #cbd5e1 !important; 
+}
+
+
+.dark .modal input,
+.dark .modal textarea {
+  background-color: #001f3f !important; 
+  color: #ffffff !important;
+  border: 1px solid #004a85 !important;
+}
+
+
+.dark .modal input::placeholder,
+.dark .modal textarea::placeholder {
+  color: #94a3b8 !important; 
+}
+
+
+.dark .modal button {
+  background-color: #001f3f !important; 
+  color: #ffffff !important;
+  border: 1px solid #004a85 !important; 
+  transition: background-color 0.2s ease;
+}
+
+
+.dark .modal button:hover {
+  background-color: #004a85 !important; 
+}
+
+
+.dark .modal .close-button,
+.dark .modal button[aria-label="Close"] {
+  background-color: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+
+.dark .modal .close-button,
+.dark .modal button[aria-label="Close"] {
+  color: #ffffff !important;
+}
+
+.modal-actions {
+  display: flex !important;
+  justify-content: center !important; 
+  flex-direction: row-reverse !important; 
+  gap: 1rem; 
+  width: 100%;
+}
