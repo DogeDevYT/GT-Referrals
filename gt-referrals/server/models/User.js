@@ -38,7 +38,11 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, unique: true, sparse: true, lowercase: true },
     passwordHash: { type: String, select: false },
-    role: { type: String, enum: ['employee', 'jobseeker'], required: true },
+    role: { type: String, enum: ['employee', 'jobseeker'] },
+    tagline: { type: String, trim: true, maxlength: 140, default: '' },
+    profilePhoto: { type: String, default: '' },
+    profilePhotoPublicId: { type: String, select: false },
+    themePreference: { type: String, enum: ['light', 'dark'], default: 'light' },
 
     // LinkedIn OAuth
     linkedinId: { type: String, unique: true, sparse: true },

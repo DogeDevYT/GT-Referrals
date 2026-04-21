@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.js';
 import employeeRoutes from './routes/employees.js';
 import jobseekerRoutes from './routes/jobseekers.js';
 import referralRoutes from './routes/referrals.js';
+import clubRoutes from './routes/clubs.js';
 
 initPassport();
 
@@ -22,6 +23,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/jobseekers', jobseekerRoutes);
 app.use('/api/referrals', referralRoutes);
+app.use('/api/clubs', clubRoutes);
 
 app.get('/', (_req, res) => res.send('Backend Running'));
 

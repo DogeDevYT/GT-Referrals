@@ -7,8 +7,8 @@ const router = Router();
 // Get a single referral (accessible to both parties)
 router.get('/:id', protect, async (req, res) => {
   const referral = await Referral.findById(req.params.id)
-    .populate('jobseeker', 'name linkedin gtEmail')
-    .populate('employee', 'name linkedin jobTitle')
+    .populate('jobseeker', 'name linkedin profilePhoto gtEmail')
+    .populate('employee', 'name linkedin profilePhoto jobTitle')
     .populate('company', 'name logoUrl')
     .populate('sharedClubs', 'name');
 

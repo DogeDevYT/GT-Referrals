@@ -10,8 +10,11 @@ const employeeSchema = new mongoose.Schema({
   jobTitle: String,
   department: String,
 
+  // GT clubs — used for priority scoring algorithm
+  clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Club' }],
+
   // Credits earned by approving referrals
-  credits: { type: Number, default: 0 },
+  credits: { type: Number, default: 100000 },
 
   // Referrals this employee has given / is reviewing
   referrals: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Referral' }],

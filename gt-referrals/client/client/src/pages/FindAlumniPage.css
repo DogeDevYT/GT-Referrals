@@ -1,0 +1,76 @@
+.find-alumni-header {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.find-alumni-header h1 { margin-bottom: 0.375rem; }
+
+.find-alumni-search {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: nowrap;
+}
+
+.find-search-input {
+  flex: 1;
+  min-width: 240px;
+}
+
+.find-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: var(--text-muted);
+}
+
+.find-results-meta {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.find-alumni-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 760px) {
+  .find-alumni-search {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 1.4rem;
+  }
+
+  .find-search-input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #alumni-search-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .find-alumni-grid { grid-template-columns: 1fr; }
+}
+
+
+.dark .find-alumni-header h1 {
+  color: #ffffff !important;
+}
+
+
+.dark .find-alumni-header p {
+  color: #cbd5e1 !important; 
+}

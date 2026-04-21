@@ -51,7 +51,7 @@ const jobseekerSchema = new mongoose.Schema({
   isGtEmailVerified: { type: Boolean, default: false },
 
   // Credits spent to request referrals
-  credits: { type: Number, default: 0 },
+  credits: { type: Number, default: 100000 },
 
   // GT clubs — used for priority scoring
   clubs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Club' }],

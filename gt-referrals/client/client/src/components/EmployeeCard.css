@@ -1,0 +1,106 @@
+.employee-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: box-shadow var(--transition), transform var(--transition);
+
+  background-color: var(--bg-card); 
+  border: 1px solid var(--border-color);
+}
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.employee-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.employee-avatar {
+  flex-shrink: 0;
+}
+
+.employee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+
+  color: var(--text-main);
+}
+
+.employee-title {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.employee-company {
+  font-size: 0.8125rem;
+  color: var(--gold-dark);
+  font-weight: 600;
+}
+
+.employee-meta-row {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.employee-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.14);
+  color: var(--success);
+  transform: translate(-3px,2px);
+}
+
+.employee-verified-pill svg {
+  width: 0.78rem;
+  height: 0.78rem;
+  stroke-width: 2.4;
+}
+
+.rec-score {
+  flex-shrink: 0;
+}
+
+.employee-clubs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 700px) {
+  .employee-card {
+    padding: 1rem;
+  }
+
+  .employee-card-top {
+    gap: 0.75rem;
+  }
+
+  .rec-score {
+    width: 100%;
+  }
+
+  .employee-meta-row {
+    gap: 0.35rem;
+  }
+}
