@@ -391,4 +391,21 @@ p  { color: var(--text-muted); }
   }
 }
 
+.dark span.home-stat-value {
+  color: white !important; 
+}
 
+.dark .referral-card-actions button.btn-success,
+.dark .referral-card-actions button.btn-success:hover {
+  background-color: rgba(16, 185, 129, 0.35) !important; 
+  color: #34d399 !important;
+  border-color: transparent !important;
+}
+
+
+.dark .referral-card-actions button.btn-danger,
+.dark .referral-card-actions button.btn-danger:hover {
+  background-color: rgba(239, 68, 68, 0.35) !important; 
+  color: #f87171 !important;
+  border-color: transparent !important;
+}
