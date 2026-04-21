@@ -198,18 +198,20 @@ router.get('/recommendations', protect, requireRole('jobseeker'), async (req, re
     isCompanyEmailVerified: true,
   })
     .populate('company', 'name logoUrl')
+    .populate('clubs', 'name priorityWeight')
     .lean();
 
   const scored = employees.map((emp) => {
-    const clubOverlap = (emp.clubs || []).filter((id) =>
-      jsClubIds.has(id.toString())
-    ).length;
+    const sharedClubs = (emp.clubs || []).filter((club) =>
+      jsClubIds.has(club._id.toString())
+    );
+    const sharedClubWeight = sharedClubs.reduce((sum, club) => sum + (club.priorityWeight || 0), 0);
     const isConnection = jsConnectionIds.has(emp.linkedinId);
     const isTarget = emp.company && targetCompanyIds.has(emp.company._id.toString());
     
-    // Weighted scoring
-    const score = (clubOverlap * 3) + (isConnection ? 5 : 0) + (isTarget ? 4 : 0);
-    return { ...emp, recommendationScore: score };
+    // Shared clubs should boost recommendations, alongside connection + target matches
+    const score = sharedClubWeight + (isConnection ? 5 : 0) + (isTarget ? 4 : 0);
+    return { ...emp, recommendationScore: score, sharedClubs };
   });
 
   scored.sort((a, b) => b.recommendationScore - a.recommendationScore);

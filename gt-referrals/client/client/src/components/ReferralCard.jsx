@@ -61,9 +61,13 @@ export default function ReferralCard({ referral, onApprove, onReject, viewAs }) 
             <span className="badge badge-gold">★ Priority {referral.priorityScore}</span>
           )}
           {referral.sharedClubs?.length > 0 && (
-            <span className="badge badge-gold">
-              🎓 {referral.sharedClubs.length} shared club{referral.sharedClubs.length !== 1 ? 's' : ''}
-            </span>
+            <>
+              {referral.sharedClubs.map((club) => (
+                <span key={club._id || club} className="badge badge-gold">
+                  🎓 {club.name || 'Shared club'}
+                </span>
+              ))}
+            </>
           )}
         </div>
       </div>
